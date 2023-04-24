@@ -3,6 +3,7 @@ import { AppService } from './app.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { UserAuthDetails } from './users/users.service';
 import { AuthService } from './auth/auth.service';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Controller()
 export class AppController {
@@ -18,8 +19,9 @@ export class AppController {
     return this.authService.login(req.user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('protected')
-  getHello(): string {
-    return this.appService.getHello();
+  getHello(@Req() req): string {
+    return this.appService.getHello() + JSON.stringify(req.user);
   }
 }
